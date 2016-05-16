@@ -1,14 +1,11 @@
 import OsfAdapter from './osf-adapter';
 
 export default OsfAdapter.extend({
-    buildURL(_, __, ___, requestType) {
+    buildURL(_, __, snap, requestType) {
         // Embed contributors
-        debugger
         var base = this._super(...arguments);
-        if (['createRecord', 'updateRecord', 'deleteRecord'].indexOf(requestType) === -1) {
-            return `${base}?embed=contributors`;
-        } else {
-            return base;
-        }
+        var ar = base.split('/');
+        ar.splice(4, 0, 'nodes/' + snap._attributes.parentId);
+        return ar.join('/');
     }
 });

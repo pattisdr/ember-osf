@@ -43,5 +43,5 @@ export default DS.Model.extend(OsfModel, {
     root: DS.belongsTo('node', {
         inverse: null
     }),
-    logs: DS.hasMany('logs')
+    //logs: DS.hasMany('logs')
 });
