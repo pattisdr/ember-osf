@@ -191,9 +191,9 @@ export default OsfModel.extend(FileItemMixin, {
         });
     },
 
-    updateContributor(contributor, permissions, bibliographic) {
+    updateContributor(contributor, permission, bibliographic) {
         if (permissions !== '')
-            contributor.set('permission', permissions);
+            contributor.set('permission', permission);
         if (bibliographic !== '')
             contributor.set('bibliographic', bibliographic);
 
@@ -214,7 +214,7 @@ export default OsfModel.extend(FileItemMixin, {
             });
 
         return this.store.adapterFor('contributor').ajax(this.get('links.relationships.contributors.links.related.href'), 'PATCH', {
-            data: {data: payload},
+            data: { data: payload },
             isBulk: true,
         }).then(resp => {
             this.store.pushPayload(resp);

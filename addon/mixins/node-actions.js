@@ -140,24 +140,20 @@ export default Ember.Mixin.create({
          * @param {Contributor[]} contributors Contributor relationships on the node.
          * @param {Object} permissionsChanges Dictionary mapping contributor ids to desired permissions.
          * @param {Object} bibliographicChanges Dictionary mapping contributor ids to desired bibliographic statuses
-         * @return {Promise} Returns a promise that resolves to the updated node
-         * with edited contributor relationships.
+         * @return {Promise} Returns a promise that resolves to the updated contributors
          */
         updateContributors(contributors, permissionsChanges, bibliographicChanges) {
             return this.get('_node').updateContributors(...arguments);
         },
-
-        /**
-         * Update contributors of a node. Makes a bulk request to the APIv2.
-         *
-         * @method updateContributor
-         * @param {Contributor} contributor relationship on the node.
-         * @param {string} permissions desired permissions.
-         * @param {boolean} bibliographic desired bibliographic statuses
-         * @return {Promise} Returns a promise that resolves to the updated node
-         * with edited contributor relationships.
-         */
-        updateContributor(contributor, permissions, bibliographic) {
+        /** Update a single contributor on a node.
+        *
+        * @method updateContributor
+        * @param {Contributor[]} contributor Contributor record to be modified
+        * @param {Object} permission New contributor permission
+        * @param {Object} bibliographic New contributor bibliographic status
+        * @return {Promise} Returns a promise that resolves to the updated contributor.
+        */
+        updateContributor(contributor, permission, bibliographic) {
             return this.get('_node').updateContributor(...arguments);
         },
         /**
