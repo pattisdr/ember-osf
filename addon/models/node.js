@@ -159,17 +159,7 @@ export default OsfModel.extend(FileItemMixin, {
         });
     },
 
-    addUnregisteredContributor(fullName, email, permission, isBibliographic, index=Number.MAX_SAFE_INTEGER) {
-        let user = this.store.createRecord('user', {
-            fullName: fullName,
-            username: email
-        });
-        // After user has been saved, add user as a contributor
-        return user.save().then(user => this.addContributor(user.id, permission, isBibliographic, index));
-
-    },
-
-    addContributor(userId, permission, isBibliographic, index=Number.MAX_SAFE_INTEGER) {
+    addContributor(userId, permission, isBibliographic, fullName, email, index=Number.MAX_SAFE_INTEGER) {
         let contrib = this.store.createRecord('contributor', {
             // Original code used the line below.
             // Serialize does something weird I guess
@@ -178,6 +168,8 @@ export default OsfModel.extend(FileItemMixin, {
             index: index,
             permission: permission,
             bibliographic: isBibliographic,
+            fullName: fullName,
+            email: email
         });
 
         var serializedContrib = contrib.serialize();
@@ -195,7 +187,7 @@ export default OsfModel.extend(FileItemMixin, {
     },
 
     updateContributor(contributor, permission, bibliographic) {
-        if (permissions !== '')
+        if (permission !== '')
             contributor.set('permission', permission);
         if (bibliographic !== '')
             contributor.set('bibliographic', bibliographic);
