@@ -192,9 +192,9 @@ export default OsfModel.extend(FileItemMixin, {
     },
 
     updateContributor(contributor, permissions, bibliographic) {
-        if (permissions === '')
+        if (permissions !== '')
             contributor.set('permission', permissions);
-        if (bibliographic === '')
+        if (bibliographic !== '')
             contributor.set('bibliographic', bibliographic);
 
         return contributor.save();
