@@ -174,14 +174,17 @@ export default OsfModel.extend(FileItemMixin, {
             // Original code used the line below.
             // Serialize does something weird I guess
             // id: `${this.get('id')}-${userId}`,
-            id: userId,
+            id: `${this.get('id')}-${userId}`,
             index: index,
             permission: permission,
             bibliographic: isBibliographic,
         });
 
+        var serializedContrib = contrib.serialize();
+        serializedContrib.data.relationships.users.data.id = userId;
+
         return this.store.adapterFor('contributor').ajax(this.get('links.relationships.contributors.links.related.href'), 'POST', {
-            data: contrib.serialize()
+            data: serializedContrib
         }).then(resp => {
             contrib.unloadRecord();
             this.store.pushPayload(resp);
