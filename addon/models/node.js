@@ -171,7 +171,7 @@ export default OsfModel.extend(FileItemMixin, {
             fullName: fullName,
             email: email
         });
-        var sendEmailQuery = sendEmail ? '?send_email=true' : '?send_email=false';
+        var sendEmailQuery = sendEmail ? '' : '?send_email=false';
         var serializedContrib = contrib.serialize();
         serializedContrib.data.relationships.users.data.id = userId;
 
