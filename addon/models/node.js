@@ -159,7 +159,7 @@ export default OsfModel.extend(FileItemMixin, {
         });
     },
 
-    addContributor(userId, permission, isBibliographic, fullName, email, index=Number.MAX_SAFE_INTEGER) {
+    addContributor(userId, permission, isBibliographic, fullName, email, sendEmail=true, index=Number.MAX_SAFE_INTEGER) {
         let contrib = this.store.createRecord('contributor', {
             // Original code used the line below.
             // Serialize does something weird I guess
@@ -171,11 +171,11 @@ export default OsfModel.extend(FileItemMixin, {
             fullName: fullName,
             email: email
         });
-
+        var sendEmailQuery = sendEmail ? '?send_email=true' : '?send_email=false';
         var serializedContrib = contrib.serialize();
         serializedContrib.data.relationships.users.data.id = userId;
 
-        return this.store.adapterFor('contributor').ajax(this.get('links.relationships.contributors.links.related.href'), 'POST', {
+        return this.store.adapterFor('contributor').ajax(this.get('links.relationships.contributors.links.related.href') + sendEmailQuery, 'POST', {
             data: serializedContrib
         }).then(resp => {
             contrib.unloadRecord();

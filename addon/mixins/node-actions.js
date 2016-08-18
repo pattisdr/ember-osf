@@ -105,9 +105,10 @@ export default Ember.Mixin.create({
          * @param {Boolean} isBibliographic Whether user will be included in citations for the node. "default: true"
          * @param {String} fullName Full name of user
          * @param {String} email User's email
+         * @param {Boolean} sendEmail Should email be sent to contributor?
          * @return {Promise} Returns a promise that resolves to the newly created contributor object.
          */
-        addContributor(userId, permission, isBibliographic, fullName, email) {
+        addContributor(userId, permission, isBibliographic, fullName, email, sendEmail, index) {
             return this.get('_node').addContributor(...arguments);
         },
         /**
