@@ -17,9 +17,16 @@ export default Ember.Component.extend({
     layout,
     maxTags: 5,
     maxSubjects: 5,
-    maxCreators: 6,
+    maxCreators: 10,
     maxDescription: 350,
     showBody: false,
+    providerUrlRegex: {
+        //'bioRxiv': '', doesnt currently have urls
+        Cogprints: /cogprints/,
+        OSF: /https?:\/\/((?!api).)*osf.io/, // Doesn't match api.osf urls
+        PeerJ: /peerj/,
+        arXiv: /arxivj/
+    },
     detailRoute: null, //Add name of route you want search-result to link to if not using Ember-SHARE detail page
     footerIcon: Ember.computed('showBody', function() {
         return this.get('showBody') ? 'caret-up' : 'caret-down';
