@@ -71,6 +71,35 @@ export default Ember.Component.extend({
         }
         return null;
     }),
+    osfID: Ember.computed('obj', function() {
+        let re = /osf.io\/(\w+)\/$/;
+        // NOTE / TODO : This will have to be removed later. Currently the only "true" preprints are solely from the OSF
+        // socarxiv and the like sometimes get picked up by as part of OSF, which is technically true. This will prevent
+        // broken links to things that aren't really preprints.
+        if (this.get('obj.providers.length') === 1 && this.get('obj.providers').find(provider => provider.name === 'OSF'))
+            for (let i = 0; i < this.get('obj.identifiers.length'); i++)
+                if (re.test(this.get('obj.identifiers')[i]))
+                    return re.exec(this.get('obj.identifiers')[i])[1];
+        return false;
+    }),
+    hyperlink: Ember.computed('obj', function() {
+        let re = null;
+        for (let i = 0; i < this.get('obj.providers.length'); i++) {
+            //If the result has multiple providers, and one of them matches, use the first one found.
+            re = this.providerUrlRegex[this.get('obj.providers')[i].name];
+            if (re) break;
+        }
+
+        re = re || this.providerUrlRegex.OSF;
+
+        const identifiers = this.get('obj.identifiers').filter(ident => ident.startsWith('http://'));
+
+        for (let j = 0; j < identifiers.length; j++)
+            if (re.test(identifiers[j]))
+                return identifiers[j];
+
+        return identifiers[0];
+    }),
     didRender() {
         MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.$()[0]]);  // jshint ignore: line
     },
