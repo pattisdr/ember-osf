@@ -83,6 +83,7 @@ export default Ember.Component.extend({
     end: '',
     type: '',
     sort: '',
+    showActiveFilters: true, //should always have a provider, don't want to mix osfProviders and non-osf
 
     noResultsMessage: Ember.computed('numberOfResults', function() {
         // Message can be overridden as component property

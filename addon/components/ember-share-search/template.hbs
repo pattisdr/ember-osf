@@ -25,12 +25,7 @@
         </div>
 
         <div class="row p-v-sm">
-            <div class="col-xs-6">
-                <button {{action 'clearFilters'}} class='btn btn-default clear-filters'>
-                    {{clearFiltersButton}}
-                </button>
-            </div>
-            <div class="col-sm-6">
+            <div class="col-xs-12">
                 <span class="pull-right"> {{!SORT BY}}
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" id="sortBy" data-toggle="dropdown"
@@ -54,7 +49,36 @@
     <div class="container">
         <div class='results-top'>
             <div class="row search-results-section p-v-lg">
-                <div class="col-sm-3 col-xs-12 faceted-search-item-bar"> {{!LEFT PANEL - FILTER}}
+                <div class="col-sm-4 col-xs-12 faceted-search-item-bar"> {{!LEFT PANEL - FILTER}}
+                    {{! ACTIVE Filters}}
+                    {{#if showActiveFilters}}
+                        <div id="activeFilters" class="well well-sm p-md">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h4>{{t "eosf.components.emberShareSearch.activeFilters.heading"}}:</h4>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="pull-right">
+                                        <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{t "eosf.components.emberShareSearch.activeFilters.button"}} {{fa-icon "remove"}}</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div id="activeFiltersList">
+                                {{#each activeFilters.providers as |filter|}}
+                                    <span class='preprint-filter provider-filter'>
+                                        {{filter-replace filter}}
+                                        {{#unless theme.isProvider}}
+                                            <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'providers' filter)}}</span>
+                                        {{/unless}}
+                                    </span>
+                                {{/each}}
+                                {{#each activeFilters.subjects as |filter|}}
+                                    <span class='preprint-filter subject-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'subjects' filter)}}</span></span>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+
                     {{faceted-search
                         onChange='filtersChanged'
                         updateParams='updateParams'
@@ -65,7 +89,7 @@
                     }}
                 </div>
 
-                <div class="col-sm-9 col-xs-12">  {{!RIGHT PANEL - SEARCH RESULTS}}
+                <div class="col-sm-8 col-xs-12">  {{!RIGHT PANEL - SEARCH RESULTS}}
                     {{#if loading}}
                         <div class="text-center p-v-md">
                             {{fa-icon 'spinner' pulse=true size=3}}

@@ -23,6 +23,12 @@ export default {
             searchResult: {
                 addedOn: 'Added on',
 
+            },
+            emberShareSearch: {
+                activeFilters: {
+                    heading: 'Active Filters',
+                    button: 'Clear filters'
+                }
             }
         }
     }
