@@ -6,18 +6,19 @@
             <h4>
                 {{#if detailRoute}}
                     {{#if osfID}}
-                         {{#link-to detailRoute osfID}}{{obj.title}}{{/link-to}}
+                         {{#link-to detailRoute osfID}}{{result.title}}{{/link-to}}
                     {{else}}
-                        {{#link-to detailRoute obj.id}}{{obj.title}}{{/link-to}}
+                        {{#link-to detailRoute result.id}}{{result.title}}{{/link-to}}
                     {{/if}}
                 {{else}}
                     {{#if hyperlink}}
-                        <a href='{{hyperlink}}'>{{obj.title}}</a>
+                        <a href='{{hyperlink}}'>{{result.title}}</a>
                     {{else}}
-                        <span>{{obj.title}}</span>
+                        <span>{{result.title}}</span>
                     {{/if}}
                 {{/if}}
             </h4>
+
             {{!Authors}}
             <p>
                 {{~#each creators as |creator index|}}
