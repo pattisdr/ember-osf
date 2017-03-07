@@ -296,14 +296,50 @@ export default Ember.Component.extend({
             contentType: 'application/json',
             data: queryBody
         }).then((json) => {
-            let results = json.hits.hits.map(hit => Object.assign(
-                {},
-                hit._source,
-                ['contributors', 'publishers'].reduce((acc, key) => Object.assign(
-                    acc,
-                    { [key]: hit._source.lists[key] }
-                ), { typeSlug: hit._source.type.classify().toLowerCase() })
-            ));
+            let results = json.hits.hits.map(hit => {
+                // HACK: Make share data look like apiv2 preprints data
+                let result = Ember.merge(hit._source, {
+                    id: hit._id,
+                    type: 'elastic-search-result',
+                    workType: hit._source['@type'],
+                    abstract: hit._source.description,
+                    subjects: hit._source.subjects.map(each => ({text: each})),
+                    providers: hit._source.sources.map(item => ({name: item})),
+                    hyperLinks: [// Links that are hyperlinks from hit._source.lists.links
+                        {
+                            type: 'share',
+                            url: config.SHARE.baseUrl + 'preprint/' + hit._id
+                        }
+                    ],
+                    infoLinks: [] // Links that are not hyperlinks  hit._source.lists.links
+                });
+
+                hit._source.identifiers.forEach(function(identifier) {
+                    if (identifier.startsWith('http://')) {
+                        result.hyperLinks.push({url: identifier});
+                    } else {
+                        const spl = identifier.split('://');
+                        const [type, uri, ..._] = spl; // jshint ignore:line
+                        result.infoLinks.push({type, uri});
+                    }
+                });
+
+                result.contributors = result.lists.contributors
+                  .sort((b, a) => (b.order_cited || -1) - (a.order_cited || -1))
+                  .map(contributor => ({
+                        users: Object.keys(contributor)
+                          .reduce(
+                              (acc, key) => Ember.merge(acc, {[key.camelize()]: contributor[key]}),
+                              {bibliographic: contributor.relation !== 'contributor'}
+                          )
+                    }));
+
+                // Temporary fix to handle half way migrated SHARE ES
+                // Only false will result in a false here.
+                result.contributors.map(contributor => contributor.users.bibliographic = !(contributor.users.bibliographic === false));  // jshint ignore:line
+
+                return result;
+            });
 
             if (json.aggregations) {
                 this.set('aggregations', json.aggregations);
