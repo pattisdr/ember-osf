@@ -5,31 +5,27 @@
             {{!Title}}
             <h4>
                 {{#if detailRoute}}
-                    {{#link-to detailRoute obj.id}}
-                        {{#if safeTitle}}
-                            {{safeTitle}}
-                        {{else}}
-                            <i class="no-title">Title not provided</i>
-                        {{/if}}
-                    {{/link-to}}
+                    {{#if osfID}}
+                         {{#link-to detailRoute osfID}}{{obj.title}}{{/link-to}}
+                    {{else}}
+                        {{#link-to detailRoute obj.id}}{{obj.title}}{{/link-to}}
+                    {{/if}}
                 {{else}}
-                    <a href="{{share-detail-url obj.type obj.id}}">
-                        {{#if safeTitle}}
-                            {{safeTitle}}
-                        {{else}}
-                            <i class="no-title">Title not provided</i>
-                        {{/if}}
-                    </a>
+                    {{#if hyperlink}}
+                        <a href='{{hyperlink}}'>{{obj.title}}</a>
+                    {{else}}
+                        <span>{{obj.title}}</span>
+                    {{/if}}
                 {{/if}}
             </h4>
             {{!Authors}}
             <p>
-                {{#each creators as |creator index|}}
+                {{~#each creators as |creator index|}}
                     {{#if index~}}
                         <span>,</span>
                     {{~/if}}
-                    {{creator.name~}}
-                {{/each}}
+                    {{author-link contributor=creator}}
+                {{~/each}}
                 {{#if extraCreators}} {{!+5, for example}}
                     <span class="text-muted">+{{extraCreators.length}}</span>
                 {{/if}}
