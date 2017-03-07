@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
 // Copied from Ember-preprints. Needs to work with Registries as well as generic case
-var filters = {
+var defaultFilters = {
     'Open Science Framework': 'OSF',
     'Cognitive Sciences ePrint Archive': 'Cogprints',
-    OSF: 'OSF Preprints',
+    OSF: 'OSF',
     'Research Papers in Economics': 'RePEc'
 };
 
@@ -18,10 +18,12 @@ var filters = {
  *
  * @class filterReplace
  * @param {String} filter Filter
+ * @param {Object} filters Specific filters list for service
  * @return {String} Return shortened provider filter, if present in filters.
  * Otherwise, return original filter.
  */
 export function filterReplace(params) {
+    const filters = params[1] || defaultFilters;
     return filters[params[0]] ? filters[params[0]] : params[0];
 }
 

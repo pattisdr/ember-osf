@@ -65,7 +65,7 @@
             <div class="m-t-sm">
                 <span class="search-result-providers">
                     {{#each result.providers as |provider index|}}
-                        {{if index '| '}}{{filter-replace provider.name}}
+                        {{if index '| '}}{{filter-replace provider.name filterReplace}}
                     {{/each}}
                 </span>
                 <span class="pull-right">
