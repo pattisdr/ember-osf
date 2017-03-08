@@ -49,7 +49,7 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
  */
 
 const MAX_SOURCES = 500;
-let filterQueryParams = ['tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
+let filterQueryParams = ['subjects', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
     classNames: ['ember-share-search'],
@@ -61,7 +61,7 @@ export default Ember.Component.extend({
     clearFiltersButton: `Clear filters`,
     pageHeader: null,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
-
+    activeFilters: { providers: [], subjects: [] },
     queryParams:  Ember.computed(function() {
         let allParams = ['q', 'start', 'end', 'sort', 'page'];
         allParams.push(...filterQueryParams);
@@ -83,6 +83,7 @@ export default Ember.Component.extend({
     end: '',
     type: '',
     sort: '',
+    subjects: '',
     showActiveFilters: true, //should always have a provider, don't want to mix osfProviders and non-osf
 
     noResultsMessage: Ember.computed('numberOfResults', function() {
@@ -382,6 +383,7 @@ export default Ember.Component.extend({
         }, 500);
     },
 
+    // Default facets - can pass in as property to component
     facets: Ember.computed('processedTypes', function() {
         return [
             { key: 'sources', title: 'Source', component: 'search-facet-source' },
@@ -511,6 +513,19 @@ export default Ember.Component.extend({
             this.set('end', '');
             this.set('sort', '');
             this.search();
-        }
+        },
+        reloadSearch: Ember.observer('activeFilters', function() {
+            this.set('page', 1);
+            this.loadPage();
+        }),
+        updateFilters(filterType, item) {
+            item = typeof item === 'object' ? item.text : item;
+            const filters = Ember.$.extend(true, [], this.get(`activeFilters.${filterType}`));
+            const hasItem = filters.includes(item);
+            const action = hasItem ? 'remove' : 'push';
+            filters[`${action}Object`](item);
+            this.notifyPropertyChange('activeFilters');
+            this.set(`activeFilters.${filterType}`, filters);
+        },
     }
 });
