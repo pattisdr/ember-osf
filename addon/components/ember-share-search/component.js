@@ -250,11 +250,15 @@ export default Ember.Component.extend({
             }
         }
 
+        // Copied from preprints - add activeFilters into to SHARE query
         const activeFilters = this.get('activeFilters');
         const filterMap = this.get('filterMap');
         for (const key in filterMap) {
             const val = filterMap[key];
             const filterList = activeFilters[key];
+
+            if (!filterList.length )
+                continue;
 
             filters.push({
                 terms: {
