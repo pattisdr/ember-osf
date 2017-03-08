@@ -141,6 +141,10 @@ export default Ember.Component.extend({
         display: 'Ingress Date (Desc)',
         sortBy: '-date_created'
     }],
+    reloadSearch: Ember.observer('activeFilters', function() {
+        this.set('page', 1);
+        this.loadPage();
+    }),
 
     init() {
         //TODO Sort initial results on date_modified
@@ -524,10 +528,6 @@ export default Ember.Component.extend({
             this.set('sort', '');
             this.search();
         },
-        reloadSearch: Ember.observer('activeFilters', function() {
-            this.set('page', 1);
-            this.loadPage();
-        }),
         updateFilters(filterType, item) {
             item = typeof item === 'object' ? item.text : item;
             const filters = Ember.$.extend(true, [], this.get(`activeFilters.${filterType}`));
