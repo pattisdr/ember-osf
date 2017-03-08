@@ -68,6 +68,7 @@ export default Ember.Component.extend({
         return allParams;
     }),
     lockedQueryBody: [],
+    filterMap: {},
 
     page: 1,
     size: 10,
@@ -230,10 +231,19 @@ export default Ember.Component.extend({
         return queryBody;
     },
 
+    combineActiveFiltersAndFacetFilters() {
+        let facetFilters = this.get('facetFilters');
+        let activeFilters = this.get('activeFilters');
+        for (var key of Object.keys(activeFilters)) {
+            facetFilters.set(key, activeFilters[key]);
+        }
+        return facetFilters;
+    },
+
     // Builds SHARE query
     getQueryBody() {
         let filters = this.buildLockedQueryBody(this.get('lockedParams')); // Empty list if no locked query parameters
-        let facetFilters = this.get('facetFilters');
+        let facetFilters = this.combineActiveFiltersAndFacetFilters();
         for (let k of Object.keys(facetFilters)) {
             let filter = facetFilters[k];
             if (filter) {
