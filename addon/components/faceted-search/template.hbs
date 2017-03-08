@@ -12,6 +12,8 @@
                 aggregations=aggregations
                 state=(get facetStates facet.key)
                 filter=(get facetFilters facet.key)
+                updateFilters=updateFilters
+                activeFilters=activeFilters
                 onChange=(action 'facetChanged')
                 data=facet.data}}
             </div>
