@@ -235,19 +235,10 @@ export default Ember.Component.extend({
         return queryBody;
     },
 
-    combineActiveFiltersAndFacetFilters() {
-        let facetFilters = this.get('facetFilters');
-        let activeFilters = this.get('activeFilters');
-        for (var key of Object.keys(activeFilters)) {
-            facetFilters.set(key, activeFilters[key]);
-        }
-        return facetFilters;
-    },
-
     // Builds SHARE query
     getQueryBody() {
         let filters = this.buildLockedQueryBody(this.get('lockedParams')); // Empty list if no locked query parameters
-        let facetFilters = this.combineActiveFiltersAndFacetFilters();
+        let facetFilters = this.get('facetFilters');
         for (let k of Object.keys(facetFilters)) {
             let filter = facetFilters[k];
             if (filter) {
@@ -258,6 +249,20 @@ export default Ember.Component.extend({
                 }
             }
         }
+
+        const activeFilters = this.get('activeFilters');
+        const filterMap = this.get('filterMap');
+        for (const key in filterMap) {
+            const val = filterMap[key];
+            const filterList = activeFilters[key];
+
+            filters.push({
+                terms: {
+                    [val]: filterList
+                }
+            });
+        }
+
 
         let query = {
             query_string: {
