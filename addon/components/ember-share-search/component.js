@@ -543,8 +543,8 @@ export default Ember.Component.extend({
             const hasItem = filters.includes(item);
             const action = hasItem ? 'remove' : 'push';
             filters[`${action}Object`](item);
-            this.notifyPropertyChange('activeFilters');
             this.set(`activeFilters.${filterType}`, filters);
+            this.notifyPropertyChange('activeFilters');
         },
     }
 });
