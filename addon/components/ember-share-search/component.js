@@ -251,10 +251,6 @@ export default Ember.Component.extend({
             }
         }
 
-        this.set('subjectFilter', facetFilters.subjects.join('AND'));
-        if (!this.get('theme.isProvider'))
-            this.set('providerFilter', facetFilters.providers.join('AND'));
-
         // Copied from preprints - add activeFilters into to SHARE query
         const activeFilters = this.get('activeFilters');
         const filterMap = this.get('filterMap');
@@ -271,6 +267,10 @@ export default Ember.Component.extend({
                 }
             });
         }
+        // Copied from preprints - modify subject and providers filters
+        this.set('subjectFilter', activeFilters.subjects.join('AND'));
+        if (!this.get('theme.isProvider'))
+            this.set('providerFilter', activeFilters.providers.join('AND'));
 
         let query = {
             query_string: {
