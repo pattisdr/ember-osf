@@ -60,7 +60,7 @@ export default Ember.Component.extend({
     noResults: 'No results. Try removing some filters.',
     clearFiltersButton: `Clear filters`,
     theme: null,
-    pageHeader: null,
+    discoverHeader: null,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
     activeFilters: { providers: [], subjects: [] },
     queryParams:  Ember.computed(function() {
@@ -86,6 +86,8 @@ export default Ember.Component.extend({
     type: '',
     sort: '',
     subjects: '',
+    provider: '',
+    subject: '',
     showActiveFilters: true, //should always have a provider, don't want to mix osfProviders and non-osf
 
     noResultsMessage: Ember.computed('numberOfResults', function() {
@@ -138,10 +140,10 @@ export default Ember.Component.extend({
         display: 'Date Updated (Asc)',
         sortBy: 'date_updated'
     }, {
-        display: 'Ingress Date (Asc)',
+        display: 'Ingest Date (Asc)',
         sortBy: 'date_created'
     }, {
-        display: 'Ingress Date (Desc)',
+        display: 'Ingest Date (Desc)',
         sortBy: '-date_created'
     }],
     reloadSearch: Ember.observer('activeFilters', function() {
@@ -270,9 +272,9 @@ export default Ember.Component.extend({
             });
         }
         // Copied from preprints - modify subject and providers filters
-        this.set('subjectFilter', activeFilters.subjects.join('AND'));
+        this.set('subject', activeFilters.subjects.join('AND'));
         if (!this.get('theme.isProvider'))
-            this.set('providerFilter', activeFilters.providers.join('AND'));
+            this.set('provider', activeFilters.providers.join('AND'));
 
         let query = {
             query_string: {

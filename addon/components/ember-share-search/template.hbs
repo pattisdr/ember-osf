@@ -3,11 +3,16 @@
     <div class="search-header">
         <div class="row m-v-md"> {{!LOGO}}
             <div class="col-xs-12 text-center">
-                {{#if pageHeader}}
-                    <h1 class="service-name"> {{pageHeader}}</h1> {{!TEXT HEADER FOR PARTICULAR SERVICE}}
-                {{else}}
-                     <h1 class="service-logo"></h1> {{!LOGO FOR PARTICULAR SERVICE - ADD IN YOUR CLIENT APPLICATION}}
+                {{#if theme.isProvider}} {{!Provider Logo, if exists}}
+                    <div class="col-xs-6 text-right">
+                        <div class="provider-brand" style="height: 140px; background-position-x: right;"></div>
+                    </div>
                 {{/if}}
+                <div class={{if theme.isProvider 'col-xs-6 text-left'}}>
+                    <h1> {{discoverHeader}} </h1> {{!Discover Page Header text}}
+                    {{!POWERED BY SHARE}}
+                    <p class="lead">{{poweredBy}} <a href="https://share.osf.io/" class="share-logo" title="SHARE"></a></p>
+                </div>
             </div>
         </div>
 
@@ -19,13 +24,19 @@
                         <button class="btn btn-default" type="button"> {{searchButton}} </button>
                     </span>
                 </div>
-                {{!POWERED BY SHARE}}
-                <p class="lead">{{poweredBy}} <a href="https://share.osf.io/" class="share-logo" title="SHARE"></a></p>
             </div>
         </div>
 
         <div class="row p-v-sm">
-            <div class="col-xs-12">
+            {{#if (not showActiveFilters)}}
+                <div class="col-xs-6">
+                    <button {{action 'clearFilters'}} class='btn btn-default clear-filters'>
+                        {{clearFiltersButton}}
+                    </button>
+                </div>
+            {{/if}}
+
+            <div class="col-xs-6">
                 <span class="pull-right"> {{!SORT BY}}
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" id="sortBy" data-toggle="dropdown"
@@ -100,7 +111,7 @@
                         <div class="text-center no-results">{{noResultsMessage}}</div>
                     {{else}}
                         {{#each results as |result|}}
-                            {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' result=result}}
+                            {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' updateFilters=(action 'updateFilters') result=result}}
                         {{/each}}
                         <div class="pull-right text-right">
                             {{pagination-pager count=clampedPages current=page change=(action 'setLoadPage')}}

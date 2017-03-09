@@ -6,7 +6,7 @@
             <h4>
                 {{#if detailRoute}}
                     {{#if osfID}}
-                         {{#link-to detailRoute osfID}}{{result.title}}{{/link-to}}
+                        {{#link-to detailRoute osfID}}{{result.title}}{{/link-to}}
                     {{else}}
                         {{#link-to detailRoute result.id}}{{result.title}}{{/link-to}}
                     {{/if}}
@@ -39,7 +39,7 @@
             {{#if subjects}}
                 <div class="m-t-sm">
                     {{#each subjects as |subject|}}
-                        <span class='subject-preview pointer' onclick={{action 'addFilter' 'subjects' subject.text}}>
+                        <span class='subject-preview pointer' onclick={{action updateFilters 'subjects' subject.text}}>
                             {{subject.text}}
                         </span>
                     {{/each}}
