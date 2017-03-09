@@ -59,6 +59,7 @@ export default Ember.Component.extend({
     poweredBy: 'powered by',
     noResults: 'No results. Try removing some filters.',
     clearFiltersButton: `Clear filters`,
+    theme: null,
     pageHeader: null,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
     activeFilters: { providers: [], subjects: [] },
@@ -250,6 +251,10 @@ export default Ember.Component.extend({
             }
         }
 
+        this.set('subjectFilter', facetFilters.subjects.join('AND'));
+        if (!this.get('theme.isProvider'))
+            this.set('providerFilter', facetFilters.providers.join('AND'));
+
         // Copied from preprints - add activeFilters into to SHARE query
         const activeFilters = this.get('activeFilters');
         const filterMap = this.get('filterMap');
@@ -266,7 +271,6 @@ export default Ember.Component.extend({
                 }
             });
         }
-
 
         let query = {
             query_string: {
@@ -525,6 +529,7 @@ export default Ember.Component.extend({
         },
 
         clearFilters() {
+            // Clears facetFilters for SHARE-type facets
             this.set('facetFilters', Ember.Object.create());
             for (var param in filterQueryParams) {
                 let key = filterQueryParams[param];
@@ -536,6 +541,11 @@ export default Ember.Component.extend({
             this.set('end', '');
             this.set('sort', '');
             this.search();
+            // Clears Active Filters for Preprints/Registries
+            this.set('activeFilters', {
+                providers: this.get('theme.isProvider') ? this.get('activeFilters.providers') : [],
+                subjects: []
+            });
         },
         updateFilters(filterType, item) {
             item = typeof item === 'object' ? item.text : item;
