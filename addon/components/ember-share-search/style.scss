@@ -1,16 +1,15 @@
 /* Header panel */
 
-.ember-share-search {
-    .search-header {
-        padding-top: 120px;
-        background: white;
-        background-size: cover;
-    }
-    .no-results {
-        font-size: 15px ;
-        color: #204762; // This color can change??
-    }
+.search-header {
+    padding-top: 120px;
+    background: white;
+    background-size: cover;
 }
+.no-results {
+    font-size: 15px ;
+    color: #204762; // This color can change??
+}
+
 
 .share-logo {
     width: 46px;
