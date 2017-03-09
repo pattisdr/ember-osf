@@ -107,6 +107,8 @@ export default Ember.Component.extend({
         return Math.ceil(this.get('numberOfResults') / this.get('size'));
     }),
 
+    // TODO update this property if a solution is found for the elastic search limitation.
+    // Ticket: SHARE-595
     clampedPages: Ember.computed('totalPages', 'size', function() {
         let maxPages = Math.ceil(10000 / this.get('size'));
         let totalPages = this.get('totalPages');
@@ -517,6 +519,14 @@ export default Ember.Component.extend({
             }
 
             this.set('page', newPage);
+            if (scroll) {
+                this.scrollToResults();
+            }
+            this.loadPage();
+        },
+        // From Ember Preprints
+        setLoadPage(pageNumber) {
+            this.set('page', pageNumber);
             if (scroll) {
                 this.scrollToResults();
             }

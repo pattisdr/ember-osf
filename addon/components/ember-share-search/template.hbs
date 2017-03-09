@@ -50,9 +50,9 @@
         <div class='results-top'>
             <div class="row search-results-section p-v-lg">
                 <div class="col-sm-4 col-xs-12 faceted-search-item-bar"> {{!LEFT PANEL - FILTER}}
-                    {{! ACTIVE Filters}}
+                    {{! Active Filters}}
                     {{#if showActiveFilters}}
-                        <div id="activeFilters" class="well well-sm p-md">
+                        <div id="activeFilters" class="well well-sm p-md m-t-sm">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <h4>{{t "eosf.components.emberShareSearch.activeFilters.heading"}}:</h4>
@@ -102,8 +102,8 @@
                         {{#each results as |result|}}
                             {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' result=result}}
                         {{/each}}
-                        <div class="pull-right text-right pagination-format p-xs">
-                            {{page-controls page=page clampedPages=clampedPages loadPage=(action 'loadPage')}}
+                        <div class="pull-right text-right">
+                            {{pagination-pager count=clampedPages current=page change=(action 'setLoadPage')}}
                         </div>
                     {{/if}}
                 </div>
