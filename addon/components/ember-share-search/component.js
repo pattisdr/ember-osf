@@ -262,7 +262,7 @@ export default Ember.Component.extend({
             const val = filterMap[key];
             const filterList = activeFilters[key];
 
-            if (!filterList.length )
+            if (!filterList.length || (key === 'providers' && this.get('theme.isProvider')))
                 continue;
 
             filters.push({
@@ -275,6 +275,15 @@ export default Ember.Component.extend({
         this.set('subject', activeFilters.subjects.join('AND'));
         if (!this.get('theme.isProvider'))
             this.set('provider', activeFilters.providers.join('AND'));
+
+        // Copied from preprints
+        if (this.get('theme.isProvider')) {
+            filters.push({
+                terms: {
+                    sources: [this.get('theme.provider.name')]
+                }
+            });
+        }
 
         let query = {
             query_string: {

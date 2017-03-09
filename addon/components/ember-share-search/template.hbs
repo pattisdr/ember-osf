@@ -1,6 +1,6 @@
 {{!Component builds DISCOVER PAGE - Blend of Ember-SHARE and Preprints Discover pages}}
-<div class="container">
-    <div class="search-header">
+<div class="search-header">
+    <div class="container">
         <div class="row m-v-md"> {{!LOGO}}
             <div class="col-xs-12 text-center">
                 {{#if theme.isProvider}} {{!Provider Logo, if exists}}
@@ -30,94 +30,92 @@
         <div class="row p-v-sm">
             {{#if (not showActiveFilters)}}
                 <div class="col-xs-6">
+                    {{!Clear filters button, if activeFilters are not displayed}}
                     <button {{action 'clearFilters'}} class='btn btn-default clear-filters'>
                         {{clearFiltersButton}}
                     </button>
                 </div>
             {{/if}}
 
-            <div class="col-xs-6">
-                <span class="pull-right"> {{!SORT BY}}
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="sortBy" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="true">
-                            Sort by: {{sort-option-display sortOptions sort}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortBy">
-                            {{#each sortOptions as |sortChoice|}}
-                                <li style="cursor: pointer; cursor: hand"><a {{action "selectSortOption" sortChoice.sortBy}}>{{sortChoice.display}}</a></li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </span>
+            <div class="col-sm-6 pull-right text-right">
+                <div class="dropdown">
+                    {{!Sort by button}}
+                    <button class="btn btn-default dropdown-toggle" type="button" id="sortBy" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true">
+                        Sort by: {{sort-option-display sortOptions sort}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortBy">
+                        {{#each sortOptions as |sortChoice|}}
+                            <li style="cursor: pointer; cursor: hand"><a {{action "selectSortOption" sortChoice.sortBy}}>{{sortChoice.display}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
-<div class="search-below-the-fold">
+<div class="search-main p-v-xl">
     <div class="container">
-        <div class='results-top'>
-            <div class="row search-results-section p-v-lg">
-                <div class="col-sm-4 col-xs-12 faceted-search-item-bar"> {{!LEFT PANEL - FILTER}}
-                    {{! Active Filters}}
-                    {{#if showActiveFilters}}
-                        <div id="activeFilters" class="well well-sm p-md m-t-sm">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h4>{{t "eosf.components.emberShareSearch.activeFilters.heading"}}:</h4>
-                                </div>
-                                <div class="col-sm-6">
-                                    <span class="pull-right">
-                                        <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{t "eosf.components.emberShareSearch.activeFilters.button"}} {{fa-icon "remove"}}</button>
-                                    </span>
-                                </div>
+        <div class="row search-results-section p-v-lg">
+            <div class="col-sm-4 col-xs-12 search-sidebar"> {{!LEFT PANEL - FILTER}}
+                {{! Active Filters}}
+                {{#if showActiveFilters}}
+                    <div id="activeFilters" class="well well-sm p-md m-t-sm">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4>{{t "eosf.components.emberShareSearch.activeFilters.heading"}}:</h4>
                             </div>
-                            <div id="activeFiltersList">
-                                {{#each activeFilters.providers as |filter|}}
-                                    <span class='preprint-filter provider-filter'>
-                                        {{filter-replace filter}}
-                                        {{#unless theme.isProvider}}
-                                            <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'providers' filter)}}</span>
-                                        {{/unless}}
-                                    </span>
-                                {{/each}}
-                                {{#each activeFilters.subjects as |filter|}}
-                                    <span class='preprint-filter subject-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'subjects' filter)}}</span></span>
-                                {{/each}}
+                            <div class="col-sm-6">
+                                <span class="pull-right">
+                                    <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{t "eosf.components.emberShareSearch.activeFilters.button"}} {{fa-icon "remove"}}</button>
+                                </span>
                             </div>
                         </div>
-                    {{/if}}
-
-                    {{faceted-search
-                        onChange='filtersChanged'
-                        updateParams='updateParams'
-                        filters=facetFilters
-                        facetStates=facetStates
-                        facets=facets
-                        aggregations=aggregations
-                        activeFilters=activeFilters
-                        updateFilters=(action 'updateFilters')
-                    }}
-                </div>
-
-                <div class="col-sm-8 col-xs-12">  {{!RIGHT PANEL - SEARCH RESULTS}}
-                    {{#if loading}}
-                        <div class="text-center p-v-md">
-                            {{fa-icon 'spinner' pulse=true size=3}}
+                        <div id="activeFiltersList">
+                            {{#each activeFilters.providers as |filter|}}
+                                <span class='preprint-filter provider-filter'>
+                                    {{filter-replace filter}}
+                                    {{#unless theme.isProvider}}
+                                        <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'providers' filter)}}</span>
+                                    {{/unless}}
+                                </span>
+                            {{/each}}
+                            {{#each activeFilters.subjects as |filter|}}
+                                <span class='preprint-filter subject-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'subjects' filter)}}</span></span>
+                            {{/each}}
                         </div>
-                    {{else if noResultsMessage}}
-                        <div class="text-center no-results">{{noResultsMessage}}</div>
-                    {{else}}
-                        {{#each results as |result|}}
-                            {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' updateFilters=(action 'updateFilters') result=result}}
-                        {{/each}}
-                        <div class="pull-right text-right">
-                            {{pagination-pager count=clampedPages current=page change=(action 'setLoadPage')}}
-                        </div>
-                    {{/if}}
-                </div>
+                    </div>
+                {{/if}}
+
+                {{faceted-search
+                    onChange='filtersChanged'
+                    updateParams='updateParams'
+                    filters=facetFilters
+                    facetStates=facetStates
+                    facets=facets
+                    aggregations=aggregations
+                    activeFilters=activeFilters
+                    updateFilters=(action 'updateFilters')
+                }}
+            </div>
+
+            <div class="col-sm-8 col-xs-12">  {{!RIGHT PANEL - SEARCH RESULTS}}
+                {{#if loading}}
+                    <div class="text-center p-v-md">
+                        {{fa-icon 'spinner' pulse=true size=3}}
+                    </div>
+                {{else if noResultsMessage}}
+                    <div class="text-center no-results">{{noResultsMessage}}</div>
+                {{else}}
+                    {{#each results as |result|}}
+                        {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' updateFilters=(action 'updateFilters') result=result}}
+                    {{/each}}
+                    <div class="pull-right text-right">
+                        {{pagination-pager count=clampedPages current=page change=(action 'setLoadPage')}}
+                    </div>
+                {{/if}}
             </div>
         </div>
     </div>
