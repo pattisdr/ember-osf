@@ -27,6 +27,23 @@
             </div>
         </div>
 
+        {{!CAROUSEL WITH PREPRINT PROVIDERS - PREPRINTS ONLY}}
+        {{#if (eq consumingService 'preprints')}}
+            <div class="row m-v-md">
+                <div class="col-xs-10 col-xs-offset-1" style="text-align: center;">
+                    {{#if (not theme.isProvider)}}
+                        <h3>Partner Repositories</h3>
+                        <div class="row">
+                            {{provider-carousel
+                                providers=model
+                                lightLogo=false
+                            }}
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        {{/if}}
+
         <div class="row p-v-sm">
             {{#if (not showActiveFilters)}}
                 <div class="col-xs-6">
@@ -69,6 +86,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <span class="pull-right">
+                                    {{!Clear filters button}}
                                     <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{t "eosf.components.emberShareSearch.activeFilters.button"}} {{fa-icon "remove"}}</button>
                                 </span>
                             </div>
@@ -78,17 +96,20 @@
                                 <span class='preprint-filter provider-filter'>
                                     {{filter-replace filter}}
                                     {{#unless theme.isProvider}}
+                                        {{!Active provider filters}}
                                         <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'providers' filter)}}</span>
                                     {{/unless}}
                                 </span>
                             {{/each}}
                             {{#each activeFilters.subjects as |filter|}}
+                                {{!Active subject filters}}
                                 <span class='preprint-filter subject-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'subjects' filter)}}</span></span>
                             {{/each}}
                         </div>
                     </div>
                 {{/if}}
 
+                {{!Search facets}}
                 {{faceted-search
                     onChange='filtersChanged'
                     updateParams='updateParams'
@@ -99,6 +120,12 @@
                     activeFilters=activeFilters
                     updateFilters=(action 'updateFilters')
                 }}
+
+                {{!Button asking if user wants to add preprint - Preprints Only }}
+                {{#if (eq consumingService 'preprints')}}
+                    {{add-preprint-box}}
+                {{/if}}
+
             </div>
 
             <div class="col-sm-8 col-xs-12">  {{!RIGHT PANEL - SEARCH RESULTS}}

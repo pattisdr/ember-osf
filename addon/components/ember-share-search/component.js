@@ -52,6 +52,7 @@ const MAX_SOURCES = 500;
 let filterQueryParams = ['subjects', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
+    theme: Ember.inject.service(), // jshint ignore:line
     classNames: ['ember-share-search'],
     layout,
     searchPlaceholder: 'Search...',
@@ -59,7 +60,6 @@ export default Ember.Component.extend({
     poweredBy: 'powered by',
     noResults: 'No results. Try removing some filters.',
     clearFiltersButton: `Clear filters`,
-    theme: null,
     discoverHeader: null,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
     activeFilters: { providers: [], subjects: [] },
@@ -70,6 +70,7 @@ export default Ember.Component.extend({
     }),
     lockedQueryBody: [],
     filterMap: {},
+    consumingService: null,
 
     page: 1,
     size: 10,
