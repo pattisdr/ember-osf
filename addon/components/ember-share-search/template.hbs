@@ -35,7 +35,7 @@
                         <h3>Partner Repositories</h3>
                         <div class="row">
                             {{provider-carousel
-                                providers=model
+                                providers=providers
                                 lightLogo=false
                             }}
                         </div>
@@ -54,15 +54,15 @@
                 </div>
             {{/if}}
 
-            <div class="col-sm-6 pull-right text-right">
-                <div class="dropdown">
+            <div class="col-sm-6 pull-right">
+                <div class="dropdown pull-right">
                     {{!Sort by button}}
                     <button class="btn btn-default dropdown-toggle" type="button" id="sortBy" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true">
                         Sort by: {{sort-option-display sortOptions sort}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="sortBy">
+                    <ul class="dropdown-menu text-right" aria-labelledby="sortBy">
                         {{#each sortOptions as |sortChoice|}}
                             <li style="cursor: pointer; cursor: hand"><a {{action "selectSortOption" sortChoice.sortBy}}>{{sortChoice.display}}</a></li>
                         {{/each}}
@@ -75,7 +75,7 @@
 </div>
 <div class="search-main p-v-xl">
     <div class="container">
-        <div class="row search-results-section p-v-lg">
+        <div class="row search-results-section">
             <div class="col-sm-4 col-xs-12 search-sidebar"> {{!LEFT PANEL - FILTER}}
                 {{! Active Filters}}
                 {{#if showActiveFilters}}
