@@ -10,9 +10,9 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
  */
 
 /**
- * Ember share-search component. Component that can build majority of search page that utilizes SHARE.
+ * Discover-page component. Component that can build majority of search page that utilizes SHARE.
  * See retraction-watch for working example.
- * Adapted from Ember-SHARE https://github.com/CenterForOpenScience/ember-share
+ * Adapted from Ember-SHARE https://github.com/CenterForOpenScience/ember-share and preprints discover page.
  *
  * Sample usage: Pass in custom text like searchPlaceholder.  The facet property will enable you to customize the filters
  *  on the left-hand side of the discover page. Sort options are the sort dropdown options.  The lockedParams are the
@@ -52,60 +52,98 @@ const MAX_SOURCES = 500;
 let filterQueryParams = ['subjects', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
-    theme: Ember.inject.service(), // jshint ignore:line
-    classNames: ['discover-page'],
     layout,
-    searchPlaceholder: 'Search...',
-    searchButton: 'Search',
-    poweredBy: 'powered by',
-    noResults: 'No results. Try removing some filters.',
-    clearFiltersButton: `Clear filters`,
-    discoverHeader: null,
+    theme: Ember.inject.service(),
+    i18n: Ember.inject.service(),
+    classNames: ['discover-page'],
+
+    activeFilters: { providers:[], subjects:[] }, // Filters that you want to show up in Active Filters box - currently just providers and subjects options
+    clearFiltersButton: Ember.computed(function() { // Text for clearFilters button
+        return this.get('i18n').t('eosf.components.discoverPage.activeFilters.button');
+    }),
+    collapsedFilters: true,
+    collapsedQueryBody: true,
+    consumingService: null, // Consuming service, like "preprints" or "registries"
+    contributors: '', // Query parameter
+    detailRoute: null, // Name of detail route, like "content" or "detail"
+    discoverHeader: null, // Text header for top of discover page
+    end: '', // Query parameter
+    eventsLastUpdated: new Date().toString(),
+    facets: Ember.computed('processedTypes', function() {  // Default facets - can pass in as property to component
+        return [
+            { key: 'sources', title: 'Source', component: 'search-facet-source' },
+            { key: 'date', title: 'Date', component: 'search-facet-daterange' },
+            { key: 'type', title: 'Type', component: 'search-facet-worktype', data: this.get('processedTypes') },
+            { key: 'tags', title: 'Tag', component: 'search-facet-typeahead' },
+            { key: 'publishers', title: 'Publisher', component: 'search-facet-typeahead', base: 'agents', type: 'publisher' },
+            { key: 'funders', title: 'Funder', component: 'search-facet-typeahead', base: 'agents', type: 'funder' },
+            { key: 'language', title: 'Language', component: 'search-facet-language' },
+            { key: 'contributors', title: 'People', component: 'search-facet-typeahead', base: 'agents', type: 'person' },
+        ];
+    }),
+    filterMap: {}, // A map of active filters to facet names expected by SHARE
+    filterReplace: {},  // A map filter names for front-end display
+    funders: '', // Query parameter
+    institutions: '', // Query parameter
+    language: '', // Query parameter
+    loading: true,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
-    activeFilters: { providers: [], subjects: [] },
-    queryParams:  Ember.computed(function() {
+    noResults: Ember.computed(function() { // Text to display if no results found
+        return this.get('i18n').t('eosf.components.discoverPage.noResults');
+    }),
+    numberOfResults: 0,
+    numberOfSources: 0,
+    organizations: '', // Query parameter
+    page: 1, // Query parameter
+    poweredBy: Ember.computed(function() { // Powered by text
+        return this.get('i18n').t('eosf.components.discoverPage.poweredBy');
+    }),
+    publishers: '', // Query parameter
+    providers: '', // Query parameter
+    providerName: null, // Provider name, if theme.isProvider, ex: psyarxiv
+    q: '', // Query parameter
+    queryParams:  Ember.computed(function() { // Query params
         let allParams = ['q', 'start', 'end', 'sort', 'page'];
         allParams.push(...filterQueryParams);
         return allParams;
     }),
-    lockedQueryBody: [],
-    filterMap: {},
-    consumingService: null,
-    providerName: null,
-
-    page: 1,
-    size: 10,
-    tags: '',
-    sources: '',
-    publishers: '',
-    funders: '',
-    institutions: '',
-    organizations: '',
-    language: '',
-    contributors: '',
-    start: '',
-    end: '',
-    type: '',
-    sort: '',
-    subjects: '',
-    provider: '',
-    subject: '',
-    showActiveFilters: true, //should always have a provider, don't want to mix osfProviders and non-osf
+    results: Ember.ArrayProxy.create({ content: [] }),
+    searchButton: Ember.computed(function() { // Search button text
+        return this.get('i18n').t('eosf.components.discoverPage.search');
+    }),
+    searchPlaceholder: Ember.computed(function() { // Search bar placeholder text
+        return this.get('i18n').t('eosf.components.discoverPage.searchPlaceholder');
+    }),
+    showActiveFilters: false, // Should active filters box be displayed (currently only displays providers/subjects
+    size: 10, // Query parameter
+    sort: '', // Query parameter
+    sortOptions: [{ // Default sort options
+        display: 'Relevance',
+        sortBy: ''
+    }, {
+        display: 'Date Updated (Desc)',
+        sortBy: '-date_updated'
+    }, {
+        display: 'Date Updated (Asc)',
+        sortBy: 'date_updated'
+    }, {
+        display: 'Ingest Date (Asc)',
+        sortBy: 'date_created'
+    }, {
+        display: 'Ingest Date (Desc)',
+        sortBy: '-date_created'
+    }],
+    sources: '', // Query parameter
+    start: '', // Query parameter
+    subjects: '', // Query parameter
+    tags: '', // Query parameter
+    took: 0,
+    type: '', // Query parameter
 
     noResultsMessage: Ember.computed('numberOfResults', function() {
         // Message can be overridden as component property
         return this.get('numberOfResults') > 0 ? '' : this.get('noResults');
     }),
-
-    collapsedFilters: true,
-    collapsedQueryBody: true,
-
-    results: Ember.ArrayProxy.create({ content: [] }),
-    loading: true,
-    eventsLastUpdated: new Date().toString(),
-    numberOfResults: 0,
-    took: 0,
-    numberOfSources: 0,
 
     totalPages: Ember.computed('numberOfResults', 'size', function() {
         return Math.ceil(this.get('numberOfResults') / this.get('size'));
@@ -132,22 +170,7 @@ export default Ember.Component.extend({
         return this.transformTypes(this.get('types'));
     }),
 
-    sortOptions: [{
-        display: 'Relevance',
-        sortBy: ''
-    }, {
-        display: 'Date Updated (Desc)',
-        sortBy: '-date_updated'
-    }, {
-        display: 'Date Updated (Asc)',
-        sortBy: 'date_updated'
-    }, {
-        display: 'Ingest Date (Asc)',
-        sortBy: 'date_created'
-    }, {
-        display: 'Ingest Date (Desc)',
-        sortBy: '-date_created'
-    }],
+
     reloadSearch: Ember.observer('activeFilters', function() {
         this.set('page', 1);
         this.loadPage();
@@ -435,20 +458,6 @@ export default Ember.Component.extend({
             this.get('debouncedLoadPage')();
         }, 500);
     },
-
-    // Default facets - can pass in as property to component
-    facets: Ember.computed('processedTypes', function() {
-        return [
-            { key: 'sources', title: 'Source', component: 'search-facet-source' },
-            { key: 'date', title: 'Date', component: 'search-facet-daterange' },
-            { key: 'type', title: 'Type', component: 'search-facet-worktype', data: this.get('processedTypes') },
-            { key: 'tags', title: 'Tag', component: 'search-facet-typeahead' },
-            { key: 'publishers', title: 'Publisher', component: 'search-facet-typeahead', base: 'agents', type: 'publisher' },
-            { key: 'funders', title: 'Funder', component: 'search-facet-typeahead', base: 'agents', type: 'funder' },
-            { key: 'language', title: 'Language', component: 'search-facet-language' },
-            { key: 'contributors', title: 'People', component: 'search-facet-typeahead', base: 'agents', type: 'person' },
-        ];
-    }),
 
     facetStatesArray: [],
 

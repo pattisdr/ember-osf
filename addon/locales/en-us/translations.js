@@ -24,11 +24,15 @@ export default {
                 addedOn: 'Added on',
 
             },
-            emberShareSearch: {
+            discoverPage: {
                 activeFilters: {
                     heading: 'Active Filters',
                     button: 'Clear filters'
-                }
+                },
+                search: 'Search',
+                searchPlaceholder: 'Search...',
+                poweredBy: 'powered by',
+                noResults: 'No results. Try removing some filters.'
             }
         }
     }

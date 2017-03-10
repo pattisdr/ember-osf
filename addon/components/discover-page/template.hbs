@@ -35,7 +35,7 @@
                         <h3>Partner Repositories</h3>
                         <div class="row">
                             {{provider-carousel
-                                providers=providers
+                                providers=fetchedProviders
                                 lightLogo=false
                             }}
                         </div>
@@ -82,12 +82,12 @@
                     <div id="activeFilters" class="well well-sm p-md m-t-sm">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h4>{{t "eosf.components.emberShareSearch.activeFilters.heading"}}:</h4>
+                                <h4>{{t "eosf.components.discoverPage.activeFilters.heading"}}:</h4>
                             </div>
                             <div class="col-sm-6">
                                 <span class="pull-right">
                                     {{!Clear filters button}}
-                                    <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{t "eosf.components.emberShareSearch.activeFilters.button"}} {{fa-icon "remove"}}</button>
+                                    <button type="button" class="btn btn-default btn-sm" {{action "clearFilters"}}>{{clearFiltersButton}} {{fa-icon "remove"}}</button>
                                 </span>
                             </div>
                         </div>
