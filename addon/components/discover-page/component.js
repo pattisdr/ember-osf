@@ -49,7 +49,7 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
  */
 
 const MAX_SOURCES = 500;
-let filterQueryParams = ['subjects', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
+let filterQueryParams = ['subject', 'provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
     layout,
@@ -99,7 +99,7 @@ export default Ember.Component.extend({
         return this.get('i18n').t('eosf.components.discoverPage.poweredBy');
     }),
     publishers: '', // Query parameter
-    providers: '', // Query parameter
+    provider: '', // Query parameter
     providerName: null, // Provider name, if theme.isProvider, ex: psyarxiv
     q: '', // Query parameter
     queryParams:  Ember.computed(function() { // Query params
@@ -135,7 +135,7 @@ export default Ember.Component.extend({
     }],
     sources: '', // Query parameter
     start: '', // Query parameter
-    subjects: '', // Query parameter
+    subject: '', // Query parameter
     tags: '', // Query parameter
     took: 0,
     type: '', // Query parameter
