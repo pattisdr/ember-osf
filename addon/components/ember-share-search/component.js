@@ -165,11 +165,12 @@ export default Ember.Component.extend({
         this.loadPage();
     },
 
-    // Loads preprint provider is theme.isProvider
+    // Loads preprint provider if theme.isProvider
     loadProvider() {
         if (this.get('theme.isProvider')) {
             this.get('theme.provider').then(provider => {
                 this.set('providerName', provider.get('name'));
+                this.loadPage();
             });
         }
     },
