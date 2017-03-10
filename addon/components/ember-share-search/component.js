@@ -71,6 +71,7 @@ export default Ember.Component.extend({
     lockedQueryBody: [],
     filterMap: {},
     consumingService: null,
+    providerName: null,
 
     page: 1,
     size: 10,
@@ -160,7 +161,17 @@ export default Ember.Component.extend({
         this.getTypes();
         this.set('debouncedLoadPage', this.loadPage.bind(this));
         this.getCounts();
+        this.loadProvider();
         this.loadPage();
+    },
+
+    // Loads preprint provider is theme.isProvider
+    loadProvider() {
+        if (this.get('theme.isProvider')) {
+            this.get('theme.provider').then(provider => {
+                this.set('providerName', provider.get('name'));
+            });
+        }
     },
 
     getCounts() {
@@ -278,10 +289,10 @@ export default Ember.Component.extend({
             this.set('provider', activeFilters.providers.join('AND'));
 
         // Copied from preprints
-        if (this.get('theme.isProvider')) {
+        if (this.get('theme.isProvider') && this.get('providerName') !== null) {
             filters.push({
                 terms: {
-                    sources: [this.get('theme.provider.name')]
+                    sources: [this.get('providerName')]
                 }
             });
         }
