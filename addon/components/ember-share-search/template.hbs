@@ -136,9 +136,11 @@
                 {{else if noResultsMessage}}
                     <div class="text-center no-results">{{noResultsMessage}}</div>
                 {{else}}
-                    {{#each results as |result|}}
-                        {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' updateFilters=(action 'updateFilters') result=result}}
-                    {{/each}}
+                    <div class="results-top">
+                        {{#each results as |result|}}
+                            {{search-result detailRoute=detailRoute filterReplace=filterReplace addFilter='addFilter' updateFilters=(action 'updateFilters') result=result}}
+                        {{/each}}
+                    </div>
                     <div class="pull-right text-right">
                         {{pagination-pager count=clampedPages current=page change=(action 'setLoadPage')}}
                     </div>
