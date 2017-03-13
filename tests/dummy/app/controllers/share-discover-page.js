@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-let filterQueryParams = ['provider', 'subject', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
+let filterQueryParams = ['types', 'provider', 'subject', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Controller.extend({
     contributors: '',

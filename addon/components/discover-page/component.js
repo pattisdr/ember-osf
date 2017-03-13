@@ -57,7 +57,7 @@ export default Ember.Component.extend({
     i18n: Ember.inject.service(),
     classNames: ['discover-page'],
 
-    activeFilters: { providers:[], subjects:[] }, // Filters that you want to show up in Active Filters box - currently just providers and subjects options
+    activeFilters: { providers:[], subjects:[], types:[] }, // Filters that you want to show up in Active Filters box - currently just providers and subjects options
     clearFiltersButton: Ember.computed(function() { // Text for clearFilters button
         return this.get('i18n').t('eosf.components.discoverPage.activeFilters.button');
     }),
@@ -307,8 +307,9 @@ export default Ember.Component.extend({
                 }
             });
         }
-        // Copied from preprints - modify subject and providers filters
-        this.set('subject', activeFilters.subjects.join('AND'));
+        // Adapted  from preprints and registries - modify subject and providers and types filters
+        this.set('subject', activeFilters.subjects.join('AND')); // For preprints
+        this.set('type', activeFilters.types.join('AND')); // For registries
         if (!this.get('theme.isProvider'))
             this.set('provider', activeFilters.providers.join('AND'));
 
@@ -374,6 +375,7 @@ export default Ember.Component.extend({
             contentType: 'application/json',
             data: queryBody
         }).then((json) => {
+            if (this.isDestroyed || this.isDestroying) return;
             let results = json.hits.hits.map(hit => {
                 // HACK: Make share data look like apiv2 preprints data
                 let result = Ember.merge(hit._source, {
@@ -389,7 +391,8 @@ export default Ember.Component.extend({
                             url: config.SHARE.baseUrl + 'preprint/' + hit._id
                         }
                     ],
-                    infoLinks: [] // Links that are not hyperlinks  hit._source.lists.links
+                    infoLinks: [], // Links that are not hyperlinks  hit._source.lists.links
+                    registrationType: hit._source.registration_type
                 });
 
                 hit._source.identifiers.forEach(function(identifier) {
@@ -402,7 +405,7 @@ export default Ember.Component.extend({
                     }
                 });
 
-                result.contributors = result.lists.contributors
+                result.contributors = result.lists.contributors ? result.lists.contributors
                   .sort((b, a) => (b.order_cited || -1) - (a.order_cited || -1))
                   .map(contributor => ({
                         users: Object.keys(contributor)
@@ -410,7 +413,7 @@ export default Ember.Component.extend({
                               (acc, key) => Ember.merge(acc, {[key.camelize()]: contributor[key]}),
                               {bibliographic: contributor.relation !== 'contributor'}
                           )
-                    }));
+                    })) : [];
 
                 // Temporary fix to handle half way migrated SHARE ES
                 // Only false will result in a false here.
