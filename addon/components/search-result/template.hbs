@@ -55,11 +55,15 @@
             {{!Abstract}}
             <p>
                 <div class="text-muted m-t-sm">
-                    {{#if abbreviation}}
-                        {{abbreviation}}
-                        {{#if abbreviated}}
-                            <span class="text-muted">...</span>
-                        {{/if}}
+                    {{#if showBody}}
+                        {{safeDescription}}
+                    {{else}}
+                         {{#if abbreviation}}
+                             {{abbreviation}}
+                             {{#if abbreviated}}
+                                 <span class="text-muted">...</span>
+                             {{/if}}
+                         {{/if}}
                     {{/if}}
                 </div>
             </p>
