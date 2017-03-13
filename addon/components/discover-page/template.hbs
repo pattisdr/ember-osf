@@ -112,6 +112,10 @@
                                 {{!Active subject filters}}
                                 <span class='preprint-filter subject-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'subjects' filter)}}</span></span>
                             {{/each}}
+                            {{!Active type filters}}
+                            {{#each activeFilters.types as |filter|}}
+                                <span class='preprint-filter type-filter'>{{filter}} <span class='pointer'>{{fa-icon 'times-circle' click=(action 'updateFilters' 'types' filter)}}</span></span>
+                            {{/each}}
                         </div>
                     </div>
                 {{/if}}
