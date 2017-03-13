@@ -307,11 +307,13 @@ export default Ember.Component.extend({
                 }
             });
         }
-        // Adapted  from preprints and registries - modify subject and providers and types filters
-        this.set('subject', activeFilters.subjects.join('AND')); // For preprints
-        this.set('type', activeFilters.types.join('AND')); // For registries
-        if (!this.get('theme.isProvider'))
-            this.set('provider', activeFilters.providers.join('AND'));
+        // Adapted from preprints and registries - modify subject and providers and types filters
+        Object.keys(activeFilters).forEach(pluralFilter => {
+            const filter = Ember.String.singularize(pluralFilter);
+            if (pluralFilter !== 'providers' || !this.get('theme.isProvider')) {
+                this.set(`${filter}`, activeFilters[pluralFilter].join('AND'));
+            }
+        });
 
         // Copied from preprints
         if (this.get('theme.isProvider') && this.get('providerName') !== null) {
