@@ -9,7 +9,14 @@
                     </div>
                 {{/if}}
                 <div class={{if theme.isProvider 'col-xs-6 text-left'}}>
-                    <h1> {{discoverHeader}} </h1> {{!Discover Page Header text}}
+                    {{#if (eq consumingService 'registries')}}
+                        <div class="registries-brand"></div>
+                        <p class="lead">
+                            <span> {{discoverHeader}} </span>
+                        </p>
+                    {{else}}
+                        <h1> {{discoverHeader}} </h1> {{!Discover Page Header text}}
+                    {{/if}}
                     {{!POWERED BY SHARE}}
                     <p class="lead">{{poweredBy}} <a href="https://share.osf.io/" class="share-logo" title="SHARE"></a></p>
                 </div>

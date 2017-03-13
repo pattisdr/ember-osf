@@ -17,6 +17,9 @@
                         <span>{{result.title}}</span>
                     {{/if}}
                 {{/if}}
+                {{#if result.withdrawn}}
+                    <span class='label label-default'> Withdrawn </span>
+                {{/if}}
             </h4>
 
             {{!Authors}}

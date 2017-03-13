@@ -25,7 +25,8 @@ export default Ember.Component.extend({
         Cogprints: /cogprints/,
         OSF: /https?:\/\/((?!api).)*osf.io/, // Doesn't match api.osf urls
         PeerJ: /peerj/,
-        arXiv: /arxivj/
+        arXiv: /arxivj/,
+        'ClinicalTrials.gov': /http:\/\/clinicaltrials.gov/,
     },
     detailRoute: null, //Add name of route you want search-result to link to if not using Ember-SHARE detail page
     footerIcon: Ember.computed('showBody', function() {
