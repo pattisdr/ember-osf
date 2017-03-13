@@ -590,10 +590,16 @@ export default Ember.Component.extend({
             this.set('sort', '');
             this.search();
             // Clears Active Filters for Preprints/Registries
-            this.set('activeFilters', {
-                providers: this.get('theme.isProvider') ? this.get('activeFilters.providers') : [],
-                subjects: []
+            let restoreActiveFilters = {};
+            Object.keys(this.get('activeFilters')).forEach(filter => {
+                if (filter === 'providers') {
+                    restoreActiveFilters[filter] = this.get('theme.isProvider') ? this.get('activeFilters.providers') : [];
+                } else {
+                    restoreActiveFilters[filter] = [];
+                }
+
             });
+            this.set('activeFilters', restoreActiveFilters);
         },
         updateFilters(filterType, item) {
             item = typeof item === 'object' ? item.text : item;
