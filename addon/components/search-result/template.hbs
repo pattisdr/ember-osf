@@ -70,6 +70,9 @@
                     {{#each result.providers as |provider index|}}
                         {{if index '| '}}{{filter-replace provider.name filterReplace}}
                     {{/each}}
+                    {{#if result.registrationType}}
+                        | {{result.registrationType}}
+                    {{/if}}
                 </span>
                 <span class="pull-right">
                     {{#if result.dateModified}} {{! moment-format will use current time if null}}
