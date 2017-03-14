@@ -23,17 +23,16 @@
             </h4>
 
             {{!Authors}}
-            <p>
-                {{~#each creators as |creator index|}}
-                    {{#if index~}}
-                        <span>,</span>
-                    {{~/if}}
-                    {{author-link contributor=creator}}
-                {{~/each}}
-                {{#if extraCreators}} {{!+5, for example}}
+            <div>
+                <ul class="comma-list">
+                    {{~#each creators as |creator|}}
+                        {{~author-link contributor=creator}}
+                    {{~/each}}
+                </ul>
+                 {{#if extraCreators}} {{!+5, for example}}
                     <span class="text-muted">+{{extraCreators.length}}</span>
                 {{/if}}
-            </p>
+            </div>
 
             {{!Added on}}
             <div class="m-t-sm"> <em> {{t "eosf.components.searchResult.addedOn"}}: {{moment-format result.date 'YYYY-MM-DD'}} </em> </div>

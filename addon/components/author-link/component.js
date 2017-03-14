@@ -21,7 +21,7 @@ import layout from './template';
  */
 export default Ember.Component.extend({
     layout,
-    tagName: 'span',
+    tagName: 'li',
     contributor: null,
 
     profileLink: Ember.computed('contributor', function() {
