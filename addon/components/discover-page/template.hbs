@@ -10,7 +10,7 @@
                 {{/if}}
                 <div class={{if theme.isProvider 'col-xs-6 text-left'}}>
                     {{#if (eq consumingService 'registries')}}
-                        <div class="registries-brand"></div>
+                        <div class="registries-brand m-t-lg"></div>
                         <p class="lead">
                             <span> {{discoverHeader}} </span>
                         </p>
@@ -31,12 +31,8 @@
                         <button class="btn btn-default" type="button"> {{searchButton}} </button>
                     </span>
                 </div>
-                {{#if shareTotal}}
-                     <p class="p-l-md">
-                        <span class="f-w-lg">{{number-format shareTotal}} {{shareTotalText}}</span>
-                        <span>{{t "eosf.components.discoverPage.asOf"}} {{moment-format currentDate "MMMM DD, YYYY"}}</span>
-                    </p>
-                {{/if}}
+                {{! Number of searchable results}}
+                {{total-share-results shareTotal=shareTotal shareTotalText=shareTotalText}}
             </div>
         </div>
 
