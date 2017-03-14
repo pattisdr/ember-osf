@@ -89,7 +89,7 @@ export default Ember.Component.extend({
     loading: true,
     lockedParams: {}, // Example: {'sources': 'PubMed Central'} will make PubMed Central a locked source that cannot be changed
     noResults: Ember.computed(function() { // Text to display if no results found
-        return this.get('i18n').t('eosf.components.discoverPage.noResults');
+        return this.get('i18n').t('eosf.components.discoverPage.broadenSearch');
     }),
     numberOfResults: 0,
     numberOfSources: 0,
