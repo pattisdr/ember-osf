@@ -123,6 +123,9 @@
                 {{/if}}
 
                 {{!Search facets}}
+                {{#if showActiveFilters}}
+                    <h4> {{t 'eosf.components.discoverPage.refineSearch'}} </h4>
+                {{/if}}
                 {{faceted-search
                     onChange='filtersChanged'
                     updateParams='updateParams'
