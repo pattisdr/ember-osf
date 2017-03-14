@@ -3,12 +3,12 @@
     <div class="container">
         <div class="row m-v-md"> {{!LOGO}}
             <div class="col-xs-12 text-center">
-                {{#if theme.isProvider}} {{!Provider Logo, if exists}}
+                {{#if (or theme.isProvider providerLogo)}} {{!Provider Logo, if exists}}
                     <div class="col-xs-6 text-right">
                         <div class="provider-brand" style="height: 140px; background-position-x: right;"></div>
                     </div>
                 {{/if}}
-                <div class={{if theme.isProvider 'col-xs-6 text-left'}}>
+                <div class={{if (or theme.isProvider providerLogo) 'col-xs-6 text-left'}}>
                     {{#if (eq consumingService 'registries')}}
                         <div class="registries-brand m-t-lg"></div>
                         <p class="lead">
