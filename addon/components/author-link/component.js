@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     profileLink: Ember.computed('contributor', function() {
         // Changed from contributor.users.identifiers
         const contributor = this.get('contributor');
-        let ids = contributor.users ? contributor.users.identifiers : contributor.identifiers;
+        let ids = contributor.users ? contributor.users.identifiers || [] : contributor.identifiers || [];
 
         for (let i = 0; i < ids.length; i++)
             if (ids[i].match(/^https?:\/\/(?:.*\.)osf\.io/))
