@@ -32,6 +32,8 @@ export default Ember.Controller.extend({
         allParams.push(...filterQueryParams);
         return allParams;
     }),
+    shareTotal: 100,
+    shareTotalText: 'searchable preprints',
     showActiveFilters: true,
     sort: '',
     sources: '',

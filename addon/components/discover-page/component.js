@@ -114,6 +114,9 @@ export default Ember.Component.extend({
     searchPlaceholder: Ember.computed(function() { // Search bar placeholder text
         return this.get('i18n').t('eosf.components.discoverPage.searchPlaceholder');
     }),
+    shareTotalText: Ember.computed(function() {
+        return this.get('i18n').t('eosf.components.discoverPage.shareTotalText');
+    }),
     showActiveFilters: false, // Should active filters box be displayed (currently only displays providers/subjects
     size: 10, // Query parameter
     sort: '', // Query parameter
