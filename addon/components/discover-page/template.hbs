@@ -148,7 +148,10 @@
                         {{fa-icon 'spinner' pulse=true size=3}}
                     </div>
                 {{else if noResultsMessage}}
-                    <div class="text-center no-results">{{noResultsMessage}}</div>
+                    <div class="text-muted text-center">
+                        <p class="lead ">{{t "eosf.components.discoverPage.noResultsFound"}}</p>
+                        <p>{{noResultsMessage}}</p>
+                    </div>
                 {{else}}
                     <div class="results-top">
                         {{#each results as |result|}}
