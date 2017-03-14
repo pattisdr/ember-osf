@@ -18,8 +18,9 @@ export default Ember.Component.extend({
     maxTags: 5,
     maxSubjects: 5,
     maxCreators: 10,
-    maxDescription: 350,
+    maxDescription: 300,
     showBody: false,
+    queryParams: null,
     providerUrlRegex: {
         //'bioRxiv': '', doesnt currently have urls
         Cogprints: /cogprints/,
@@ -107,6 +108,16 @@ export default Ember.Component.extend({
                 return identifiers[j];
 
         return identifiers[0];
+    }),
+    // Determines whether tags in search results should be links - preprints and registries are not using tag filter
+    tagsInQueryParams: Ember.computed('queryParams', function() {
+        let foundTags = false;
+        this.get('queryParams').forEach(param => {
+           if (param === 'tags') {
+               foundTags = true;
+           }
+        });
+        return foundTags;
     }),
     didRender() {
         MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.$()[0]]);  // jshint ignore: line

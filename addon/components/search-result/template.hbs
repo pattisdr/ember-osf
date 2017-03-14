@@ -106,9 +106,13 @@
 
                 {{!Tags}}
                 {{#each tags as |tag|}}
-                    <a class="filter" {{action 'addFilter' 'tags' tag}}>
+                    {{#if tagsInQueryParams}}
+                        <a class="filter" {{action 'addFilter' 'tags' tag}}>
+                            <span class="badge">{{fix-special-char tag}}</span>
+                        </a>
+                    {{else}}
                         <span class="badge">{{fix-special-char tag}}</span>
-                    </a>
+                    {{/if}}
                 {{/each}}
                 {{#if extraTags}}
                     <span class="text-muted">+{{extraTags.length}}</span>
