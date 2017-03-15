@@ -22,6 +22,7 @@ export default {
         components: {
             searchResult: {
                 addedOn: 'Added on',
+                lastEdited: 'Last edited'
 
             },
             discoverPage: {
