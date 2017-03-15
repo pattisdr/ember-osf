@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
     },
     funders: '',
     language: '',
-    lockedParams: {types: 'preprint'},
+    lockedParams: { types: 'preprint' },
     organizations: '',
     page: 1,
     provider: '',
