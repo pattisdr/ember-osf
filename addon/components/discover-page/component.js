@@ -432,7 +432,8 @@ export default Ember.Component.extend({
                 loading: false,
                 firstLoad: false,
                 results: results,
-                queryError: false
+                queryError: false,
+                shareDown: false,
             });
             if (this.get('totalPages') && this.get('totalPages') < this.get('page')) {
                 this.search();
@@ -447,7 +448,7 @@ export default Ember.Component.extend({
             if (errorResponse.status === 400) {
                 this.set('queryError', true);
             } else {
-                this.send('elasticDown');
+                this.set('shareDown', true);
             }
         });
     },
@@ -488,12 +489,6 @@ export default Ember.Component.extend({
     },
 
     actions: {
-        // COPIED FROM EMBER-SHARE/APP/ROUTES/DISCOVER.JS. What does this do??
-        elasticDown() {
-            // this.intermediateTransitionTo('elastic-down');
-            return false;
-        },
-
         addFilter(type, filterValue) {
             let currentValue = getSplitParams(this.get(type)) || [];
             let newValue = getUniqueList([filterValue].concat(currentValue));

@@ -150,6 +150,13 @@
                     <div class="text-center p-v-md">
                         {{fa-icon 'spinner' pulse=true size=3}}
                     </div>
+                {{else if queryError}}
+                    {{query-syntax message=queryError}}
+                {{else if shareDown}}
+                    <div class="text-muted text-center">
+                        <p class="lead ">{{t 'eosf.components.discoverPage.shareUnavailable'}}</p>
+                        <p> {{t 'eosf.components.discoverPage.shareUnavailableDescription'}}</p>
+                    </div>
                 {{else if noResultsMessage}}
                     <div class="text-muted text-center">
                         <p class="lead ">{{t "eosf.components.discoverPage.noResultsFound"}}</p>
