@@ -12,14 +12,5 @@ test('it renders', function(assert) {
 
   this.render(hbs`{{query-syntax}}`);
 
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#query-syntax}}
-      template block text
-    {{/query-syntax}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.ok(this.$().text().trim().includes('Could not perform search query.'));
 });
