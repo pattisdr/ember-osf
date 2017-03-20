@@ -140,6 +140,7 @@ export default Ember.Component.extend({
     took: 0,
     type: '', // Query parameter
 
+    showLuceneHelp: false, // Is Lucene Search help modal open?
     noResultsMessage: Ember.computed('numberOfResults', function() {
         return this.get('numberOfResults') > 0 ? '' : this.get('noResults');
     }),
@@ -489,6 +490,10 @@ export default Ember.Component.extend({
     },
 
     actions: {
+        // Toggles display of lucene search help modal
+        toggleShowLuceneHelp() {
+            this.toggleProperty('showLuceneHelp');
+        },
         addFilter(type, filterValue) {
             let currentValue = getSplitParams(this.get(type)) || [];
             let newValue = getUniqueList([filterValue].concat(currentValue));

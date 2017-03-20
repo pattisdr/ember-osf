@@ -28,9 +28,15 @@
                 <div class="input-group input-group-lg"> {{!SEARCH BAR}}
                     {{input id="searchBox" value=q class="form-control" key-up='typing' placeholder=searchPlaceholder}}
                     <span class="input-group-btn">
+                        {{!HELP BUTTON}}
+                        <button class="btn btn-default" type="button" {{action 'toggleShowLuceneHelp'}}> <i class="fa fa-question text-muted"></i></button>
+                        {{!SEARCH BUTTON}}
                         <button class="btn btn-default" type="button"> {{searchButton}} </button>
                     </span>
                 </div>
+                {{!Lucene search help modal}}
+                {{search-help-modal isOpen=showLuceneHelp}}
+
                 {{!NUMBER OF SEARCHABLE RESULTS}}
                 {{total-share-results shareTotal=shareTotal shareTotalText=shareTotalText}}
             </div>
