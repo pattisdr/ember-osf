@@ -18,7 +18,6 @@ export default Ember.Component.extend({
     theme: Ember.inject.service(),
     shareTotal: null,
     consumingService: null,
-    shareTotalText: 'searchable resources',
     resourceType: Ember.computed('consumingService', function() {
         const consumingService = this.get('consumingService');
         const serviceMap = {
