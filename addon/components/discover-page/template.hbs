@@ -77,9 +77,9 @@
                         {{t 'eosf.components.discoverPage.sortBy'}}: {{sort-option-display sortOptions sort}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu text-right" aria-labelledby="sortBy">
+                    <ul class="dropdown-menu text-right" aria-labelledby="sortBy" id="sortByOptionList">
                         {{#each sortOptions as |sortChoice|}}
-                            <li style="cursor: pointer; cursor: hand"><a {{action "selectSortOption" sortChoice.sortBy}}>{{sortChoice.display}}</a></li>
+                            <li class="listOption" style="cursor: pointer; cursor: hand"><a {{action "selectSortOption" sortChoice.sortBy}}>{{sortChoice.display}}</a></li>
                         {{/each}}
                     </ul>
                 </div>
