@@ -49,7 +49,6 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
  */
 
 const MAX_SOURCES = 500;
-let filterQueryParams = ['subject', 'provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
     layout,
@@ -80,6 +79,7 @@ export default Ember.Component.extend({
     }),
     filterMap: {}, // A mapping of active filters to facet names expected by SHARE
     filterReplace: {},  // A mapping of filter names for front-end display
+    filterQueryParams: ['subject', 'provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'],
     funders: '', // Query parameter
     institutions: '', // Query parameter
     language: '', // Query parameter
@@ -101,7 +101,7 @@ export default Ember.Component.extend({
     q: '', // Query parameter
     queryParams:  Ember.computed(function() { // Query params
         let allParams = ['q', 'start', 'end', 'sort', 'page'];
-        allParams.push(...filterQueryParams);
+        allParams.push(...this.get('filterQueryParams'));
         return allParams;
     }),
     results: Ember.ArrayProxy.create({ content: [] }), // Results from SHARE query
@@ -467,9 +467,9 @@ export default Ember.Component.extend({
 
     facetStatesArray: [],
 
-    facetStates: Ember.computed(...filterQueryParams, 'end', 'start', function() {
+    facetStates: Ember.computed(...'filterQueryParams', 'end', 'start', function() {
         let facetStates = {};
-        for (let param of filterQueryParams) {
+        for (let param of this.get('filterQueryParams')) {
             facetStates[param] = getSplitParams(this.get(param));
         }
         facetStates.date = { start: this.get('start'), end: this.get('end') };
@@ -566,6 +566,7 @@ export default Ember.Component.extend({
         clearFilters() {
             // Clears facetFilters for SHARE-type facets
             this.set('facetFilters', Ember.Object.create());
+            const filterQueryParams = this.get('filterQueryParams');
             for (var param in filterQueryParams) {
                 let key = filterQueryParams[param];
                 if (filterQueryParams.indexOf(key) > -1) {
