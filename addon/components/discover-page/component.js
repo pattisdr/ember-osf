@@ -50,7 +50,7 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
 
 const MAX_SOURCES = 500;
 
-let filterQueryParams = ['provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
+let filterQueryParams = ['subject', 'provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
 
 export default Ember.Component.extend({
     layout,
@@ -81,7 +81,6 @@ export default Ember.Component.extend({
     }),
     filterMap: {}, // A mapping of active filters to facet names expected by SHARE
     filterReplace: {},  // A mapping of filter names for front-end display
-    filterQueryParams: ['subject', 'provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'],
     funders: '', // Query parameter
     institutions: '', // Query parameter
     language: '', // Query parameter

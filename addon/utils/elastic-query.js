@@ -67,7 +67,7 @@ function decodeParams(param) {
 
 function getSplitParams(params) {
     if (!params.length) {
-        return params.slice(0);
+        return params.slice(0) || [];
     } else if (params.length && Ember.$.isArray(params[0])) {
         return params[0];
     } else if (params.length && typeof (params) === 'string') {
