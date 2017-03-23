@@ -50,6 +50,8 @@ import { getUniqueList, getSplitParams, encodeParams } from '../../utils/elastic
 
 const MAX_SOURCES = 500;
 
+let filterQueryParams = ['provider', 'tags', 'sources', 'publishers', 'funders', 'institutions', 'organizations', 'language', 'contributors', 'type'];
+
 export default Ember.Component.extend({
     layout,
     theme: Ember.inject.service(),
@@ -101,7 +103,7 @@ export default Ember.Component.extend({
     q: '', // Query parameter
     queryParams:  Ember.computed(function() { // Query params
         let allParams = ['q', 'start', 'end', 'sort', 'page'];
-        allParams.push(...this.get('filterQueryParams'));
+        allParams.push(...filterQueryParams);
         return allParams;
     }),
     results: Ember.ArrayProxy.create({ content: [] }), // Results from SHARE query
@@ -292,28 +294,28 @@ export default Ember.Component.extend({
         }
 
         // Copied from preprints - add activeFilters into SHARE query
-        const activeFilters = this.get('activeFilters');
-        const filterMap = this.get('filterMap');
-        for (const key in filterMap) {
-            const val = filterMap[key];
-            const filterList = activeFilters[key];
-
-            if (!filterList.length || (key === 'providers' && this.get('theme.isProvider')))
-                continue;
-
-            filters.push({
-                terms: {
-                    [val]: filterList
-                }
-            });
-        }
+        // const activeFilters = this.get('activeFilters');
+        // const filterMap = this.get('filterMap');
+        // for (const key in filterMap) {
+        //     const val = filterMap[key];
+        //     const filterList = activeFilters[key];
+        //
+        //     if (!filterList.length || (key === 'providers' && this.get('theme.isProvider')))
+        //         continue;
+        //
+        //     filters.push({
+        //         terms: {
+        //             [val]: filterList
+        //         }
+        //     });
+        // }
         // Adapted from preprints and registries - modifies query params in URL
-        Object.keys(activeFilters).forEach(pluralFilter => {
-            const filter = Ember.String.singularize(pluralFilter);
-            if (pluralFilter !== 'providers' || !this.get('theme.isProvider')) {
-                this.set(`${filter}`, activeFilters[pluralFilter].join('AND'));
-            }
-        });
+        // Object.keys(activeFilters).forEach(pluralFilter => {
+        //     const filter = Ember.String.singularize(pluralFilter);
+        //     if (pluralFilter !== 'providers' || !this.get('theme.isProvider')) {
+        //         this.set(`${filter}`, activeFilters[pluralFilter].join('AND'));
+        //     }
+        // });
 
         // Copied from preprints, if theme, and provider to query
         if (this.get('theme.isProvider') && this.get('providerName') !== null) {
@@ -467,9 +469,9 @@ export default Ember.Component.extend({
 
     facetStatesArray: [],
 
-    facetStates: Ember.computed(...'filterQueryParams', 'end', 'start', function() {
+    facetStates: Ember.computed(...filterQueryParams, 'end', 'start', function() {
         let facetStates = {};
-        for (let param of this.get('filterQueryParams')) {
+        for (let param of filterQueryParams) {
             facetStates[param] = getSplitParams(this.get(param));
         }
         facetStates.date = { start: this.get('start'), end: this.get('end') };
@@ -566,7 +568,6 @@ export default Ember.Component.extend({
         clearFilters() {
             // Clears facetFilters for SHARE-type facets
             this.set('facetFilters', Ember.Object.create());
-            const filterQueryParams = this.get('filterQueryParams');
             for (var param in filterQueryParams) {
                 let key = filterQueryParams[param];
                 if (filterQueryParams.indexOf(key) > -1) {
@@ -601,3 +602,4 @@ export default Ember.Component.extend({
         },
     }
 });
+
